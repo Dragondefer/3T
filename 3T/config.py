@@ -1,8 +1,8 @@
-# Configuration globale
+# Config globale
 API_URL : str  = 'http://127.0.0.1:5000/v1/chat/completions'
 audio_path : str  = r"C:\Users\evnnl\OneDrive - Conseil régional Grand Est - Numérique Educatif\Documents\android project\Code\interaction\3T\3T\voice_temp\infer_cli_out.wav"
 
-# Définir les personnages et leurs voix associées
+# Def les perso
 characters: dict[str, str] = {
     "2B": {
         "context": r"*context: You are 2B. You meet Dragon, your commander and creator. Important: Answer shortly.*",
@@ -11,7 +11,7 @@ characters: dict[str, str] = {
     },
 }
 
-# Personnage actif par défaut
+# Perso actif par défaut
 current_character : str = "2B"
 
 def get_current_character():
@@ -31,12 +31,12 @@ def change_character(new_character: str):
     else:
         print(f"Le personnage {new_character} n'existe pas. Choisissez parmi : {list(characters.keys())}")
 
-# Headers et paramètres pour l'API
+# Headers et params pour l'API
 headers : dict[str] = {"Content-Type": "application/json"}
 history : list[dict[str, str]] = [{"role": "system", "content": characters[current_character]["context"]}]
 generation_params = {"temperature": 0.7, "max_new_tokens": 100, "top_p": 0.9, "n": 1}
 
-# Paramètres audio
+# Params audio
 Model : str = 'small'
 English : bool = False
 Translate : bool = False
