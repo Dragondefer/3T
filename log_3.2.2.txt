@@ -1,0 +1,6 @@
+1.x.x : première version regroupant les bases (text to text, base chat..)
+
+2.x.x : ajout des modules de tests, ajout du speech to speech et optimisation globales améliorant la stabilité (modules_tests, gestion de chaque modules, chois des input et output)
+
+3.1.x : ajout de la gestion des images (génération des images)
+ | 3.2.x : ajout de la reconnaissance des images (BLIP)
