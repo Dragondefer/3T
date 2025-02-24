@@ -4,3 +4,4 @@
 
 3.1.x : ajout de la gestion des images (génération des images)
  | 3.2.x : ajout de la reconnaissance des images (BLIP)
+ | 3.3.x : ajout du bot discord pour pouvoir intéragire à distance (TtT + BLIP + img gen)
