@@ -2,7 +2,7 @@ Voici un exemple de README.md complet pour ton projet :
 
 ---
 
-# 3T - Chatbot Interactif Multimodal
+# 3T - Chatbot Multimodal - ver 3.3.1
 
 3T est un projet de chatbot interactif qui combine plusieurs modalités d'entrée et de sortie (texte et speech), la génération d'images via une API Stable Diffusion, et l'analyse d'images via BLIP. Le projet inclut également une intégration avec Discord pour interagir en temps réel avec un LLM.
 
@@ -26,7 +26,7 @@ Voici un exemple de README.md complet pour ton projet :
   Un bot Discord qui permet d'interagir avec le système en envoyant des messages et des images directement dans Discord.
 
 - **Commandes personnalisées :**  
-  Gestion de commandes telles que `!img`, `!histo`, etc. pour enrichir la conversation.
+  Gestion de commandes telles que `!help`, `!img`, `!histo`, etc. pour enrichir la conversation.
 
 - **Tests unitaires :**  
   Suite de tests permettant de valider les fonctionnalités et la performance des différents modules.
@@ -37,30 +37,42 @@ Voici un exemple de README.md complet pour ton projet :
 
 ```plaintext
 3T/
-├── TTT/
-│   ├── __init__.py
-│   ├── api_requests.py
-│   ├── audio_utils.py
-│   ├── commands.py
-│   ├── config.py
-│   ├── image_api.py       # Génération d'image via API (Stable Diffusion)
-│   ├── image_BLIP.py      # Analyse d'image avec BLIP
-│   ├── main.py            # Chatbot en mode console
-│   ├── stream_handler.py
-│   ├── text_processing.py
-│   ├── voices/            # Fichiers audio de référence et générés
-│   ├── generated_images/  # Images générées par l'API
-│   └── voice_temp/        # Fichiers temporaires (ex. basic_config.toml)
-├── tests/
-│   ├── __init__.py
-│   ├── audio_test.py
-│   ├── commands_test.py
-│   ├── image_test.py
-│   ├── textgen_test.py
-│   └── text_test.py
-├── modules_tests.py       # Script pour lancer tous les tests
-├── bot.py                 # Bot Discord (intégrant LLM, analyse et génération d'image)
-└── README.md
+├── log_3.3.1.txt
+├── modules_tests.py
+├── README.md
+└── TTT/
+    ├── __init__.py
+    ├── api_requests.py       # Gestion des requets avec text-generation-webui (Text to Text)
+    ├── audio_utils.py        # Génération d'audio via F5-TTS (Text to Speech)
+    ├── commands.py           # Commandes (`!help`...)
+    ├── config.py
+    ├── dataset_cmd_img.json  # Dataset pour LoRA (Low Rank Adaptation) pour la génération d'images
+    ├── image_api.py          # Génération d'images via API (Stable Diffusion)
+    ├── image_BLIP.py         # Analyse d'images avec BLIP
+    ├── main.py               # Chatbot en mode console
+    ├── main_discord.py       # Bot Discord
+    ├── stream_handler.py     # Module Whisper (Speech to Text)
+    ├── text_processing.py
+    ├── generated_images/     # Images générées par l'API
+    │   ├── txt2img_20250220-194859_0.png
+    │   └── txt2img_20250220-202032_0.png
+    ├── saves/                # Sauvegardes du chat (en json avec la commande `!save <nom>`)
+    │   └── test.json
+    ├── send_images/          # Images destinées à être envoyées/analyées (séléctionne l'image la plus récente)
+    │   ├── txt2img_20250220-194859_0.png
+    │   └── txt2img_20250220-202422_0.png
+    ├── tests/                # Tests unitaires avec la librairie unittest
+    │   ├── __init__.py
+    │   ├── audio_test.py
+    │   ├── base.py
+    │   ├── commands_test.py
+    │   ├── image_test.py
+    │   ├── textgen_test.py
+    │   └── text_test.py
+    ├── voices/               # Fichiers audio de référence
+    │   └── 2B.wav
+    └── voice_temp/           # Fichiers temporaires (ex. basic_config.toml et infer_cli_out.wav)
+        └── basic_config.toml
 ```
 
 ---
@@ -118,20 +130,20 @@ Voici un exemple de README.md complet pour ton projet :
 Pour lancer le chatbot en mode console (texte et/ou speech) :
 
 ```bash
-python TTT/main.py
+python 3T/TTT/main.py
 ```
 
 Le programme vous demandera de choisir le mode d'entrée (texte ou speech), le mode de sortie et le niveau de journalisation.
 
 ### Exécution des Tests
 
-Pour lancer l'ensemble des tests unitaires :
+Pour lancer l'ensemble des tests unitaires (chois des modules intégré):
 
 ```bash
-python modules_tests.py
+python 3T/modules_tests.py
 ```
 
-Vous pouvez aussi lancer des tests individuels situés dans le dossier `tests/`.
+Vous pouvez aussi lancer les tests individuels situés dans le dossier `T/TTT/tests/`.
 
 ### Bot Discord
 
@@ -139,17 +151,18 @@ Pour lancer le bot Discord, procédez ainsi :
 
 1. **Configurer le token Discord :**  
    Stocke ton token dans la variable d'environnement `DISCORD_BOT_TOKEN` ou dans un fichier `.env`.
+   Ou remplacer directement le `DISCORD_BOT_TOKEN` par le token du bot discord.
 
 2. **Lancer le bot :**
 
    ```bash
-   python bot.py
+   python 3T/TTT/main_discord.py
    ```
 
-Le bot répondra aux messages envoyés sur le serveur Discord :
+Le bot répondra aux messages envoyés en mp.
 
 - **Message texte :**  
-  Le bot génère une réponse via le LLM en utilisant ton pipeline de traitement.
+  Le bot génère une réponse via le LLM en utilisant l'API de text-generation-webui.
 
 - **Envoi d'image en pièce jointe :**  
   Le bot télécharge l'image, la passe à BLIP pour en extraire une description, puis intègre cette description dans le prompt envoyé au LLM.
@@ -166,6 +179,18 @@ Le bot répondra aux messages envoyés sur le serveur Discord :
 
 - **Génération d'image :**  
   La commande `img(<prompt>)` permet de générer une image via l'API Stable Diffusion (module `image_api.py`) et d'envoyer le résultat en pièce jointe dans Discord.
+
+---
+
+## Dépendances Principales
+
+- Python utilsé : 3.10.6
+- [discord.py](https://discordpy.readthedocs.io/)
+- [Transformers](https://huggingface.co/transformers/)
+- [Pydub](https://github.com/jiaaro/pydub)
+- [Requests](https://docs.python-requests.org/)
+- [python-dotenv](https://github.com/theskumar/python-dotenv)
+- Autres bibliothèques utilisées dans le projet (voir `requirements.txt`)
 
 ---
 
@@ -192,18 +217,6 @@ Pour éviter de publier ton token dans le code, stocke-le dans une variable d'en
    if not TOKEN:
        raise ValueError("Token Discord non trouvé.")
    ```
-
----
-
-## Dépendances Principales
-
-- Python 3.x
-- [discord.py](https://discordpy.readthedocs.io/)
-- [Transformers](https://huggingface.co/transformers/)
-- [Pydub](https://github.com/jiaaro/pydub)
-- [Requests](https://docs.python-requests.org/)
-- [python-dotenv](https://github.com/theskumar/python-dotenv)
-- Autres bibliothèques utilisées dans le projet (voir `requirements.txt`)
 
 ---
 
