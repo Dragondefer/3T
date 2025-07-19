@@ -9,6 +9,7 @@
 ---
 
 # 3T - Chatbot Multimodal - ver 3.3.2
+Official web-site: https://dragondefer.github.io/3T/
 
 3T est un projet de chatbot, étant de base seulement Text-To-Text, contenant des modules interactif qui ajoute plusieurs modalités d'entrée et de sortie (texte et speech), la génération d'images via une API Stable Diffusion, et l'analyse d'images via BLIP. Le projet inclut également d'autres intégration comme avec Discord pour interagir en temps réel avec un LLM.
 
