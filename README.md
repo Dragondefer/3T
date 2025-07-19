@@ -8,7 +8,7 @@
 
 ---
 
-# 3T - Chatbot Multimodal - ver 3.3.1
+# 3T - Chatbot Multimodal - ver 3.3.2
 
 3T est un projet de chatbot, étant de base seulement Text-To-Text, contenant des modules interactif qui ajoute plusieurs modalités d'entrée et de sortie (texte et speech), la génération d'images via une API Stable Diffusion, et l'analyse d'images via BLIP. Le projet inclut également d'autres intégration comme avec Discord pour interagir en temps réel avec un LLM.
 
@@ -217,8 +217,10 @@ Les contributions sont les bienvenues !
 
 ## Licence
 
-Ce projet est open-source et publié sous la licence MIT.  
+Ce projet est open-source et publié sous la licence MIT.
 Auteur : Dragondefer
+
+En cas de réutilisation du code, merci de citer l'auteur (Dragondefer) et d'y ajouter le lien du répertoire (https://github.com/Dragondefer/3T)
 
 Certains composants s'appuient sur des outils et API externes tels que :
 - Stable Diffusion WebUI
