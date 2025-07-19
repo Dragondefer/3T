@@ -217,7 +217,14 @@ Les contributions sont les bienvenues !
 
 ## Licence
 
-Voir Licence sur [Github](https://github.com/Dragondefer/3T/blob/main/LICENSE)
+Ce projet est open-source et publié sous la licence MIT.  
+Auteur : Dragondefer
+
+Certains composants s'appuient sur des outils et API externes tels que :
+- Stable Diffusion WebUI
+- Text Generation WebUI
+
+Ces outils ne sont pas inclus dans ce dépôt et restent sous leurs propres licences. Veuillez vous référer à leurs référentiels respectifs pour les détails de licence et d'utilisation.
 
 ---
 
