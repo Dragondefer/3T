@@ -1,10 +1,17 @@
-Voici un exemple de README.md complet pour ton projet :
+![Star](https://img.shields.io/github/stars/dragondefer/3T)
+
+![Issues](https://img.shields.io/github/issues/dragondefer/3T)
+![Stars](https://img.shields.io/github/stars/dragondefer/3T)
+![Forks](https://img.shields.io/github/forks/dragondefer/3T)
+![Repo Size](https://img.shields.io/github/repo-size/dragondefer/3T)
+![Last Commit](https://img.shields.io/github/last-commit/dragondefer/3T)
+![Language](https://img.shields.io/github/languages/top/dragondefer/3T)
 
 ---
 
 # 3T - Chatbot Multimodal - ver 3.3.1
 
-3T est un projet de chatbot interactif qui combine plusieurs modalités d'entrée et de sortie (texte et speech), la génération d'images via une API Stable Diffusion, et l'analyse d'images via BLIP. Le projet inclut également une intégration avec Discord pour interagir en temps réel avec un LLM.
+3T est un projet de chatbot, étant de base seulement Text-To-Text, contenant des modules interactif qui ajoute plusieurs modalités d'entrée et de sortie (texte et speech), la génération d'images via une API Stable Diffusion, et l'analyse d'images via BLIP. Le projet inclut également d'autres intégration comme avec Discord pour interagir en temps réel avec un LLM.
 
 ---
 
@@ -33,7 +40,7 @@ Voici un exemple de README.md complet pour ton projet :
 
 ---
 
-## Structure du Projet
+## Structure du Projet (simplifié)
 
 ```plaintext
 3T/
@@ -143,7 +150,7 @@ Pour lancer l'ensemble des tests unitaires (chois des modules intégré):
 python 3T/modules_tests.py
 ```
 
-Vous pouvez aussi lancer les tests individuels situés dans le dossier `T/TTT/tests/`.
+Vous pouvez aussi lancer les tests individuels situés dans le dossier `3T/TTT/tests/`.
 
 ### Bot Discord
 
@@ -191,32 +198,13 @@ Le bot répondra aux messages envoyés en mp.
 - [Requests](https://docs.python-requests.org/)
 - [python-dotenv](https://github.com/theskumar/python-dotenv)
 - Autres bibliothèques utilisées dans le projet (voir `requirements.txt`)
+Si une erreure de dépendance apparait, rechercher `<lib-name> pypi` pour l'installer avec pip facilement
 
 ---
 
-## Variables d'Environnement
+## TOKEN Discord
 
-Pour éviter de publier ton token dans le code, stocke-le dans une variable d'environnement ou utilise un fichier `.env`.
-
-### Exemple avec un fichier `.env` :
-
-1. Crée un fichier `.env` à la racine du projet :
-
-   ```
-   DISCORD_BOT_TOKEN=ton_token_ici
-   ```
-
-2. Dans ton code (par exemple dans `bot.py`), charge le fichier avec :
-
-   ```python
-   from dotenv import load_dotenv
-   import os
-
-   load_dotenv()
-   TOKEN = os.getenv("DISCORD_BOT_TOKEN")
-   if not TOKEN:
-       raise ValueError("Token Discord non trouvé.")
-   ```
+Pour utiliser le module discord, il faut mettre son TOKEN discord (du bot) dans le fichier 3T/TTT/token.py (remplacer le "YOUR_DISCORD_TOKEN" par le token)
 
 ---
 
@@ -230,13 +218,13 @@ Les contributions sont les bienvenues !
 
 ## Licence
 
-Ce projet est sous Licence Apache 2.0
+Voir Licence sur [Github](https://github.com/Dragondefer/3T/blob/main/LICENSE)
 
 ---
 
 ## Remarques
 
 Ce projet vise à fournir une interface interactive et multimodale pour interagir avec un LLM, analyser des images et générer du contenu visuel.  
-N'hésitez pas à signaler les bugs ou proposer des améliorations via [GitHub Issues](https://github.com/ton-utilisateur/3T/issues).
+N'hésitez pas à signaler les bugs ou proposer des améliorations via [GitHub Issues](https://github.com/dragondefer/3T/issues).
 
 ---
