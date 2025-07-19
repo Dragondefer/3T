@@ -1,5 +1,4 @@
-![Star](https://img.shields.io/github/stars/dragondefer/3T)
-
+![Star](https://img.shields.io/github/stars/dragondefer/3T) 
 ![Issues](https://img.shields.io/github/issues/dragondefer/3T)
 ![Stars](https://img.shields.io/github/stars/dragondefer/3T)
 ![Forks](https://img.shields.io/github/forks/dragondefer/3T)
