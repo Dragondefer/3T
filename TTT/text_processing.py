@@ -1,6 +1,9 @@
+__version__ = 120
+
 import re # voir regexper.com pour aide visuel
 import requests
 import datetime
+import traceback
 
 from audio_utils import generate_audio
 from image_BLIP import process_message
@@ -58,11 +61,11 @@ def handle_message(message: str) -> str:
         message += f" (system info you may need: actual time {now.day}-{now.month}-{now.year}, hour: {now.hour}:{now.minute})"
 
     if "!img" in message:
-        message = process_message(message=message)
+        message = process_message(message)
 
     return message
 
-def handle_answer(response:str, StS:bool=False):
+def handle_answer(response:str, StS:bool=False, debug:int=0):
     """
     execute les commandes de l'assistant et rafine le texte.
 
@@ -86,17 +89,13 @@ def handle_answer(response:str, StS:bool=False):
                 open_last_image()
             except (requests.exceptions.HTTPError, Exception) as e:
                 print('erreur lors de la génération de l\'image:', e)
+                traceback.print_exc()
     
         response = re.sub(r"img\((.*?)\)", "", response) # suppr la commande img(prompt) de la réponse
     
-    match_audio = None
-    try:
-        match_audio = re.search(r"audio\((.*?)\)")
-    except TypeError:
-        print('Missing input or not a str:', TypeError)
-    except Exception as e:
-        print('idk:', e)
     
+    match_audio = re.search(r"audio\((.*?)\)", response)
+
     if match_audio and (StS == False):
         prompt = match_audio.group(1)
         try:

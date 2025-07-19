@@ -1,3 +1,5 @@
+__version__ = 54
+
 import requests
 import base64
 import json

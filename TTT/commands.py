@@ -1,11 +1,13 @@
+__version__ = 83
+
 import os
 import json
 
 from config import (generation_params,
-                    current_character,
-                    history,
                     characters,
-                    SAVE_DIR
+                    SAVE_DIR,
+                    change_character,
+                    clear_history,
                     )
 
 from api_requests import (load_llm,
@@ -23,31 +25,28 @@ def print_help():
                             "  !histo               - Afficher l'historique\n"
                             "  !list                - Lister les sauvegardes\n"
                             "  !character <name>    - Changer de caractère\n"
+                            "  !debug <int>         - Changer le niveau de debug\n"
                             "  !load_llm            - Charge le model LLM\n"
-                            "  !unload_llm          - Décharge le model LLM"
-                            "  !quit                - Quitter le bot"
+                            "  !unload_llm          - Décharge le model LLM\n"
+                            "  !quit                - Quitter le bot\n"
                         )
 
 def afficher_info():
+    from config import current_character
     print(f"Paramètres de génération:\n  Température: {generation_params['temperature']}\n  Max new tokens: {generation_params['max_new_tokens']}\n  Top p: {generation_params['top_p']}\n  Nombre de réponses: {generation_params['n']}\n  Caractère actuel: {current_character}")
 
 def afficher_model():
+    from config import current_character
     print(f"Nom du modèle: {current_character}")
 
 def afficher_history():
+    from config import history
     print("Historique de conversation:")
     for msg in history:
         print(f"{msg['role']}: {msg['content']}")
 
-def changer_caractere(nouveau):
-    global current_character
-    if nouveau in characters:
-        current_character = nouveau
-        print(f"Caractère changé en : {current_character}")
-    else:
-        print(f"Caractère invalide. Choix possibles : {', '.join(characters)}")
-
 def supprimer_dernier():
+    from config import history
     if len(history) > 1:
         history.pop()
         print("Dernier message supprimé.")
@@ -60,6 +59,7 @@ if not os.path.exists(SAVE_DIR):
     os.makedirs(SAVE_DIR)
 
 def save_history(filename="history.json"):
+    from config import history
     if not filename.endswith('.json'):
         filename += '.json'
     with open(os.path.join(SAVE_DIR, filename), 'w') as f:
@@ -67,7 +67,7 @@ def save_history(filename="history.json"):
     print(f"Historique sauvegardé sous {filename}")
 
 def load_history(filename="history.json"):
-    global history
+    from config import history
     try:
         with open(os.path.join(SAVE_DIR, filename), 'r') as f:
             history = json.load(f)
@@ -75,17 +75,17 @@ def load_history(filename="history.json"):
     except FileNotFoundError:
         print("Fichier non trouvé.")
 
-def clear_history():
-    global history
-    history = [{"role": "system", "content": characters[current_character]["context"]}]
-    print("Historique réinitialisé.")
-
 def list_saves():
     return [f for f in os.listdir(SAVE_DIR) if f.endswith('.json')]
 
 def img_prompt():
-    global history
+    from config import history
     history.append({"role": "system", "content": "When I ask for an image, please respond using the command img(prompt). The prompt must be a highly detailed description of the requested image. It should include phrases like \"high quality\" and \"realistic\", and provide a thorough depiction of the scene. For example, if I ask \"take a pic of your room\", do not simply output \"dream bedroom\". Instead, describe in detail how your room would look—include elements like the layout, lighting, furniture, colors, textures, and any unique features. The more specific the description, the more accurately the image will match the request."})
+
+def change_debug_mode(level:int=0) -> None:
+    from config import debug_mode
+    debug_mode = level
+    return debug_mode
 
 commandes = {
     '!help': lambda args: print_help(),
@@ -97,8 +97,9 @@ commandes = {
     '!back': lambda args: supprimer_dernier(),
     '!histo': lambda args: afficher_history(),
     '!list': lambda args: print("Sauvegardes disponibles :", ', '.join(list_saves())),
-    '!character': lambda args: changer_caractere(args[0]) if args else print("Usage: !character <name>"),
+    '!character': lambda args: change_character(args[0]) if args else print("Usage: !character <name>"),
     '!prompt_img': lambda args: img_prompt(),
+    '!debug': lambda args: change_debug_mode(args[0]) if args else print('Usage: !debug <int>'),
     '!load_llm': lambda args: load_llm(),
     '!unload_llm': lambda args: unload_llm(),
     '!quit': lambda args: exit(print("3T s'éteind..")),

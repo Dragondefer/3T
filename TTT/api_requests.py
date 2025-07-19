@@ -1,3 +1,5 @@
+__version__ = 44
+
 import requests
 from config import API_URL, headers, generation_params, characters
 
@@ -27,7 +29,7 @@ def load_llm():
     except Exception as e:
         print('Erreur:',e)
 
-def request_textgen(user_message: str, debug:str='0') -> str:
+def request_textgen(user_message: str, debug:int=0) -> str:
     """
     Ajoute le message de l'utilisateur a l'historique puis envoie la requête au textgen puis obtien la réponce sous forme de texte `str`.
     """
@@ -51,16 +53,16 @@ def request_textgen(user_message: str, debug:str='0') -> str:
         "n": generation_params["n"]
     }
 
-    if debug >= '3':
+    if debug >= 3:
         print(data)
 
     try:
-        if debug >= '2':
+        if debug >= 2:
             print("Envoi de la requête de génération de texte à l'API...")
         response = requests.post(API_URL, headers=headers, json=data, verify=False)
         response.raise_for_status()
 
-        if debug >= '3':
+        if debug >= 3:
             print(response.json)
 
         assistant_message: str = response.json()['choices'][0]['message']['content']

@@ -1,3 +1,5 @@
+__version__ = 10
+
 import os
 import time
 import torch
@@ -6,8 +8,8 @@ from transformers import BlipProcessor, BlipForConditionalGeneration
 from config import send_image_dir
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base").to(device)
+processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-large")
+model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-large").to(device)
 
 
 def get_latest_image(directory):
@@ -31,15 +33,19 @@ def describe_image(image_path):
     
     return description
 
-def process_message(message):
+def process_message(message : str, image_path: str = None):
     """ Vérifie si le message contient !img et ajoute la description de l'image. """
     if "!img" in message:
-        latest_image = get_latest_image(send_image_dir)
-        if latest_image:
-            description = describe_image(latest_image)
+        if image_path:
+            description = describe_image(image_path)
             return f"{message.replace('!img', '')} (image desc: {description})"
         else:
-            return message + " (Aucune image trouvée.)"
+            latest_image = get_latest_image(send_image_dir)
+            if latest_image:
+                description = describe_image(latest_image)
+                return f"{message.replace('!img', '')} (image desc: {description})"
+            else:
+                return message + " (Aucune image trouvée.)"
     return message
 
 if __name__ == '__main__':

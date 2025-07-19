@@ -1,3 +1,5 @@
+__version__ = 36
+
 import os
 import re
 import discord
@@ -10,13 +12,22 @@ from stream_handler import StreamHandler
 from api_requests import request_textgen
 from text_processing import extraire_dialogues_et_actions, handle_message, handle_answer
 from audio_utils import generate_audio, play_audio
-from config import characters, change_character, get_current_character, send_image_dir
+from config import characters, change_character, get_current_character, send_image_dir, debug_mode
 from commands import handle_commands
 
 from image_BLIP import describe_image
 from image_api import generate_image
 
-debug_mode = '1'  # 1: error, 2: debug, 3: verbose
+"""
+from dotenv import load_dotenv
+
+load_dotenv()
+TOKEN = os.getenv("DISCORD_BOT_TOKEN")
+if not TOKEN:
+    raise ValueError("Token Discord non trouvé.")
+    input(votre token discord: )
+"""
+
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -24,7 +35,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
-    print(f"Bot connecté en tant que {bot.user}")
+    print(f"3T connecté en tant que {bot.user}")
     character_config = characters[get_current_character()]
     print("Personnage courant:", character_config)
 
@@ -77,24 +88,29 @@ async def on_message(message: discord.Message):
         return
 
     try:
-        if debug_mode >= '2':
-            print("DEBUG: Message utilisateur capté:", full_prompt)
+        if debug_mode >= 2: print("DEBUG: Message utilisateur capté:", full_prompt)
+
         processed_message = handle_message(full_prompt)
-        if debug_mode >= '2':
-            print("DEBUG: Message traité:", processed_message)
+
+        if debug_mode >= 2: print("DEBUG: Message traité:", processed_message)
+
         loop = asyncio.get_event_loop()
         assistant_message = await loop.run_in_executor(None, request_textgen, processed_message, debug_mode)
-        if debug_mode >= '2':
-            print("DEBUG: Message assistant généré:", assistant_message)
+
+        if debug_mode >= 2: print("DEBUG: Message assistant généré:", assistant_message)
+
         assistant_message = handle_answer(response=assistant_message, StS=False)
-        if debug_mode >= '2':
-            print("DEBUG: Message assistant traité:", assistant_message)
+
+        if debug_mode >= 2: print("DEBUG: Message assistant traité:", assistant_message)
+
         await message.channel.send(assistant_message)
+        
     except Exception as e:
         error_text = f"Erreur: {str(e)}"
         await message.channel.send(error_text)
         traceback.print_exc()
 
 
-TOKEN = "YOUR_DISCORD_BOT_TOKEN_HERE"
+from token import TOKEN
+
 bot.run(TOKEN)
