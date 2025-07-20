@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3T - Chatbot Multimodal Futuriste</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-cyan: #00f5ff;
+            --primary-purple: #8a2be2;
+            --primary-pink: #ff1493;
+            --dark-bg: #0a0a0f;
+            --card-bg: rgba(15, 15, 25, 0.8);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(45deg, 
+                rgba(0, 245, 255, 0.1) 0%, 
+                rgba(138, 43, 226, 0.1) 25%, 
+                rgba(255, 20, 147, 0.1) 50%, 
+                rgba(0, 245, 255, 0.1) 75%, 
+                rgba(138, 43, 226, 0.1) 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--primary-cyan);
+            border-radius: 50%;
+            animation: float 8s linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 245, 255, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(0, 245, 255, 0.8); }
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 5%;
+            backdrop-filter: blur(15px);
+            background: rgba(10, 10, 15, 0.9);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 245, 255, 0.3);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary-cyan), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-cyan);
+            text-shadow: 0 0 10px var(--primary-cyan);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-purple));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            z-index: 10;
+            animation: slideInUp 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary-cyan), var(--primary-purple), var(--primary-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% 200%;
+            animation: gradientShift 5s ease infinite;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, var(--primary-cyan), var(--primary-purple));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 245, 255, 0.4);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            background: linear-gradient(45deg, var(--primary-cyan), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--primary-purple), var(--primary-pink));
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 245, 255, 0.1);
+            border-color: var(--primary-cyan);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary-cyan), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Tech Stack */
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .tech-item {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 15px;
+            padding: 20px 30px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tech-item:hover {
+            transform: scale(1.1);
+            border-color: var(--primary-purple);
+            box-shadow: 0 10px 20px rgba(138, 43, 226, 0.3);
+        }
+
+        /* Future Vision */
+        .future-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .future-item {
+            background: linear-gradient(135deg, rgba(0, 245, 255, 0.1), rgba(138, 43, 226, 0.1));
+            border: 1px solid rgba(255, 20, 147, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .future-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-pink);
+            box-shadow: 0 15px 30px rgba(255, 20, 147, 0.2);
+        }
+
+        .future-item h3 {
+            color: var(--primary-pink);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(15px);
+            border-top: 1px solid rgba(0, 245, 255, 0.3);
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h3 {
+            color: var(--primary-cyan);
+            margin-bottom: 20px;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-cyan);
+        }
+
+        .copyright {
+            border-top: 1px solid rgba(0, 245, 255, 0.2);
+            padding-top: 20px;
+            color: var(--text-secondary);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tech-stack {
+                justify-content: center;
+            }
+        }
+
+        /* Scroll animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .animate-on-scroll.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, var(--primary-cyan), var(--primary-purple));
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="bg-animation"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">3T</div>
+            <ul class="nav-links">
+                <li><a href="#accueil">Accueil</a></li>
+                <li><a href="#fonctionnalites">Fonctionnalités</a></li>
+                <li><a href="#technologie">Technologie</a></li>
+                <li><a href="#avenir">Avenir</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="accueil" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>3T Chatbot</h1>
+                <p>L'avenir de l'interaction multimodale est ici. Découvrez un chatbot révolutionnaire qui combine IA, reconnaissance vocale, génération d'images et analyse intelligente.</p>
+                <a href="#fonctionnalites" class="cta-button">Découvrir la Magie</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="fonctionnalites">
+        <div class="container">
+            <h2 class="section-title animate-on-scroll">Fonctionnalités Révolutionnaires</h2>
+            <div class="features-grid">
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">🎤</div>
+                    <h3>Interaction Multimodale</h3>
+                    <p>Communiquez par texte ou par voix. Notre système avancé transcrit votre parole et répond avec une synthèse vocale naturelle.</p>
+                </div>
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Génération d'Images IA</h3>
+                    <p>Créez des images époustouflantes à partir de simples descriptions textuelles grâce à l'intégration Stable Diffusion.</p>
+                </div>
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">👁️</div>
+                    <h3>Analyse d'Images</h3>
+                    <p>Envoyez des images et recevez des descriptions détaillées générées par notre modèle BLIP de pointe.</p>
+                </div>
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">💬</div>
+                    <h3>Bot Discord Intégré</h3>
+                    <p>Interagissez directement sur Discord avec toutes les fonctionnalités : chat, images, commandes personnalisées.</p>
+                </div>
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">🧠</div>
+                    <h3>IA Conversationnelle</h3>
+                    <p>Profitez de conversations naturelles avec mémoire contextuelle et personnalités de personnages personnalisables.</p>
+                </div>
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Temps Réel</h3>
+                    <p>Traitement en temps réel de la voix, détection d'activité vocale et réponses instantanées.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Section -->
+    <section id="technologie">
+        <div class="container">
+            <h2 class="section-title animate-on-scroll">Technologies de Pointe</h2>
+                <div class="tech-stack animate-on-scroll">
+                <a href="https://github.com/oobabooga/text-generation-webui" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">
+                    <div class="tech-item">🤖 Text Generation/div>
+                </a>
+                <a href="https://github.com/AUTOMATIC1111/stable-diffusion-webui" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">
+                    <div class="tech-item">🎨 Stable Diffusion</div>
+                </a>
+                <a href="https://github.com/salesforce/BLIP" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">
+                    <div class="tech-item">👁️ BLIP Vision</div>
+                </a>
+                <a href="https://github.com/openai/whisper" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">
+                    <div class="tech-item">🎤 Whisper STT</div>
+                </a>
+                <a href="https://github.com/SWivid/F5-TTS" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">
+                    <div class="tech-item">🔊 F5-TTS</div>
+                </a>
+                <a href="https://discordpy.readthedocs.io" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">
+                    <div class="tech-item">💬 Discord.py</div>
+                </a>
+                <a href="https://www.python.org" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">
+                    <div class="tech-item">🐍 Python</div>
+                </a>
+                <a href="https://huggingface.co" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">
+                    <div class="tech-item">🚀 HuggingFace</div>
+                </a>
+            </div>
+            
+            <div class="features-grid" style="margin-top: 60px;">
+                <div class="feature-card animate-on-scroll">
+                    <h3>Architecture Modulaire</h3>
+                    <p>Système conçu avec une architecture modulaire extensible permettant l'ajout facile de nouvelles fonctionnalités et intégrations.</p>
+                </div>
+                <div class="feature-card animate-on-scroll">
+                    <h3>APIs Intégrées</h3>
+                    <p>Intégration transparente avec les meilleures APIs d'IA : génération de texte, création d'images, analyse visuelle et synthèse vocale.</p>
+                </div>
+                <div class="feature-card animate-on-scroll">
+                    <h3>Tests Automatisés</h3>
+                    <p>Suite de tests complète couvrant tous les modules principaux pour garantir la fiabilité et faciliter la maintenance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Future Vision Section -->
+    <section id="avenir">
+        <div class="container">
+            <h2 class="section-title animate-on-scroll">Vision du Futur</h2>
+            <div class="future-grid">
+                <div class="future-item animate-on-scroll">
+                    <h3>📱 Application Android</h3>
+                    <p>Développement d'une application mobile native intégrant toutes les fonctionnalités de conversation vocale pour des interactions naturelles en déplacement.</p>
+                </div>
+                <div class="future-item animate-on-scroll">
+                    <h3>🎯 IA Vocale Avancée</h3>
+                    <p>Amélioration de la précision de la reconnaissance vocale et de la naturalité de la synthèse pour des interactions encore plus fluides.</p>
+                </div>
+                <div class="future-item animate-on-scroll">
+                    <h3>🌐 Modalités Étendues</h3>
+                    <p>Exploration de nouvelles modalités : vidéo, gestes, réalité augmentée pour repousser les limites de l'interaction homme-machine.</p>
+                </div>
+                <div class="future-item animate-on-scroll">
+                    <h3>💻 Interface Web</h3>
+                    <p>Création d'interfaces web et mobile riches pour une expérience utilisateur encore plus accessible et immersive.</p>
+                </div>
+                <div class="future-item animate-on-scroll">
+                    <h3>🔗 Intégrations Étendues</h3>
+                    <p>Connexion avec d'autres plateformes et APIs pour élargir les possibilités d'application et augmenter la portée du chatbot.</p>
+                </div>
+                <div class="future-item animate-on-scroll">
+                    <h3>🚀 IA Quantique</h3>
+                    <p>Préparation pour l'intégration des technologies quantiques émergentes pour des capacités de traitement révolutionnaires.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>🚀 Projet 3T</h3>
+                    <p>Chatbot multimodal révolutionnaire combinant IA, reconnaissance vocale et génération d'images.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>🔗 Liens</h3>
+                    <p><a href="https://github.com/Dragondefer/3T" target="_blank" rel="noopener noreferrer">GitHub Repository</a></p>
+                    <p><a href="https://github.com/Dragondefer/3T/blob/main/Documentation/3T_Comprehensive_Documentation.md">Documentation</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>👨‍💻 Développeur</h3>
+                    <p>Créé par <strong>Dragondefer</strong></p>
+                    <p>Licence <a href="https://github.com/Dragondefer/3T/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT - Open Source</a></p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Projet 3T. Tous droits réservés. | Propulsé par l'IA et l'innovation</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 8 + 4) + 's';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                
+                // Random colors
+                const colors = ['#00f5ff', '#8a2be2', '#ff1493'];
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements with animate-on-scroll class
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Enhanced hover effects for cards
+        document.querySelectorAll('.feature-card, .future-item').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-15px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Dynamic background color change based on scroll position
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+            const bgAnimation = document.querySelector('.bg-animation');
+            
+            // Change background intensity based on scroll
+            const opacity = Math.min(0.3, scrolled / 2000);
+            bgAnimation.style.opacity = opacity;
+        });
+
+        // Initialize particles
+        createParticles();
+
+        // Add typing effect to hero text
+        const heroTitle = document.querySelector('.hero h1');
+        const text = heroTitle.textContent;
+        heroTitle.textContent = '';
+        
+        let i = 0;
+        const typeWriter = () => {
+            if (i < text.length) {
+                heroTitle.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        };
+
+        // Start typing effect after a short delay
+        setTimeout(typeWriter, 1000);
+
+        // Add glitch effect to logo on hover
+        const logo = document.querySelector('.logo');
+        logo.addEventListener('mouseenter', function() {
+            this.style.animation = 'none';
+            this.style.textShadow = '2px 0 #ff1493, -2px 0 #00f5ff, 0 2px #8a2be2';
+            setTimeout(() => {
+                this.style.animation = 'glow 3s ease-in-out infinite';
+                this.style.textShadow = 'none';
+            }, 200);
+        });
+    </script>
+</body>
+</html>
